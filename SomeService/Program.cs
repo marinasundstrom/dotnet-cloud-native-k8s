@@ -52,8 +52,6 @@ builder.Services.AddMassTransit(x =>
     {
         var rabbitmqHost = builder.Configuration["RABBITMQ_HOST"] ?? "localhost";
         
-        cfg.ReceiveEndpoint
-
         cfg.Host(rabbitmqHost, "/", h =>
         {
             h.Username("guest");
