@@ -33,10 +33,10 @@ You will need to build and put the image in Minikube internal registry. More on 
 If all is set-up correctly, simply apply the ``.yaml`` files found ``k8s`` directory - in s pretty logical order:
 
 ```sh
-kubectl apply rabbimq.yaml
-kubectl apply zipkin.yaml
-kubectl apply someservice.yaml
-kubectl apply webapplication2.yaml
+kubectl apply -f rabbimq.yaml
+kubectl apply -f zipkin.yaml
+kubectl apply -f someservice.yaml
+kubectl apply -f webapplication2.yaml
 ```
 
 To then expose the main "webbapplication"2" app to the host:
