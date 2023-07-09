@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http.Json;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+using WebApplication2.Data;
+
 // Define some important constants to initialize tracing with
 var serviceName = "MyCompany.MyProduct.MyService";
 var serviceVersion = "1.0.0";
@@ -50,6 +52,9 @@ builder.Services.Configure<JsonOptions>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSqlServer<AppDbContext>(
+    builder.Configuration.GetConnectionString("mssql") ?? builder.Configuration.GetConnectionString("AppDbConnection"));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -114,4 +119,12 @@ app.MapPost("/test2", async (IPublishEndpoint publishEndpoint, IRequestClient<Fo
     //await publishEndpoint.Publish(new Foo(text));
 });
 
-app.Run();
+using (var scope = app.Services.CreateScope())
+{
+    using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    //await context.Database.EnsureDeletedAsync();
+    await context.Database.EnsureCreatedAsync();
+}
+
+await app.RunAsync();

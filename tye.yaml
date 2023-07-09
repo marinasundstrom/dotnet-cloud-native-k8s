@@ -28,6 +28,22 @@ services:
       protocol: https
       port: 5021
 
+- name: mssql
+  image: mcr.microsoft.com/azure-sql-edge:latest
+  env:
+  - name: MSSQL_SA_PASSWORD
+    value: P@ssw0rd
+  - name: MSSQL_PID
+    value: Developer
+  - name: ACCEPT_EULA
+    value: "Y"
+  bindings:
+  - port: 1433
+    connectionString: Server=${host},${port};User Id=sa;Password=${env:MSSQL_SA_PASSWORD};Encrypt=false;Database=AppDb
+  volumes:
+  - source: .data/sql-edge
+    target: /var/opt/mssql/data
+
   - name: zipkin
     image: openzipkin/zipkin
     bindings:

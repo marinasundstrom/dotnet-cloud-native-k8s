@@ -33,13 +33,14 @@ You will need to build and put the image in Minikube internal registry. More on 
 If all is set-up correctly, simply apply the ``.yaml`` files found ``k8s`` directory - in s pretty logical order:
 
 ```sh
+kubectl apply -f mssql.yaml
 kubectl apply -f rabbimq.yaml
 kubectl apply -f zipkin.yaml
 kubectl apply -f someservice.yaml
 kubectl apply -f webapplication2.yaml
 ```
 
-To then expose the main "webbapplication"2" app to the host:
+To then expose the main "webbapplication2" app to the host:
 
 ```sh
 minikube service webapplication2 --url
@@ -88,3 +89,11 @@ eval $(minikube -p minikube docker-env)
 ```
 
 Read more here: https://medium.com/swlh/how-to-run-locally-built-docker-images-in-kubernetes-b28fbc32cc1d 
+
+### Mount directory in Minikube
+
+Expose a directory in the host system to Minikube.
+
+```sh
+minikube mount $HOME:/host
+```

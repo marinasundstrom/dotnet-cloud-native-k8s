@@ -37,7 +37,7 @@ spec:
       volumes:
         - name: rabbitmq-data
           hostPath:
-            path: "/host/Projects/BlazorApp1/.data/rabbitmq"
+            path: "/host/rabbitmq"
             type: DirectoryOrCreate
 ---
 apiVersion: v1

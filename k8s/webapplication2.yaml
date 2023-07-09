@@ -31,6 +31,8 @@ spec:
             value: rabbitmq-svc
           - name: ZIPKIN_URL
             value: http://zipkin-svc:9411
+          - name: ConnectionStrings__AppDbConnection
+            value: Server=mssql-svc,1433;User Id=sa;Password=P@ssw0rd;Encrypt=false;Database=AppDb
 ---
 apiVersion: v1
 kind: Service
