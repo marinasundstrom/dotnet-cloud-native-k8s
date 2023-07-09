@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  serviceName: rabbitmq
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
+        ports:
+          - containerPort: 5672
+            hostPort: 5672
+          - containerPort: 15672
+            hostPort: 15672
+        env:
+        - name: "RABBITMQ_ERLANG_COOKIE"
+          value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-data
+      volumes:
+        - name: rabbitmq-data
+          hostPath:
+            path: "/host/Projects/BlazorApp1/.data/rabbitmq"
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-svc
+spec:
+  type: NodePort
+  selector:
+    app: rabbitmq # label of the pod
+  ports:
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+      nodePort: 30032
+    - name: http
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+      nodePort: 30033

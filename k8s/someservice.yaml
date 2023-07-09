@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: someservice
+  labels:
+    app: full-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: someservice
+  template:
+    metadata:
+      labels:
+        app: full-app
+        service: someservice
+    spec:
+      containers:
+      - name: someservice
+        image: 127.0.0.1:64970/sundis/someservice
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+          - name: WEBAPPLICATION2_URL
+            value: http://webapplication2:8080
+          - name: RABBITMQ_HOST
+            value: rabbitmq-svc
+          - name: ZIPKIN_URL
+            value: http://zipkin-svc:9411
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: someservice
+  labels:
+    app: full-app
+    service: someservice
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    service: someservice
