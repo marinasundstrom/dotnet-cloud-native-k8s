@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: someservice
-        image: 127.0.0.1:64970/sundis/someservice
+        image: sundis/someservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -25,7 +25,7 @@ spec:
           - name: ASPNETCORE_ENVIRONMENT
             value: Development
           - name: WEBAPPLICATION2_URL
-            value: http://webapplication2:8080
+            value: http://webapplication2:8080/
           - name: RABBITMQ_HOST
             value: rabbitmq-svc
           - name: ZIPKIN_URL

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: webapplication2
-        image: 127.0.0.1:64970/sundis/webapplication2
+        image: sundis/webapplication2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

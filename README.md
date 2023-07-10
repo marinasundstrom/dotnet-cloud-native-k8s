@@ -55,8 +55,8 @@ You can now hit: ``<webapplication2 URL>/swagger``
 When working against the Minikube internal registry, all you need to do is building the images.
 
 ```sh
-docker build . -f WebApplication2/Dockerfile -t 127.0.0.1:64970/sundis/webapplication2:latest
-docker build . -f SomeService/Dockerfile -t 127.0.0.1:64970/sundis/someservice:latest
+docker build . -f WebApplication2/Dockerfile -t sundis/webapplication2:latest
+docker build . -f SomeService/Dockerfile -t sundis/someservice:latest
 ```
 
 Replace the relevant values with your own.
