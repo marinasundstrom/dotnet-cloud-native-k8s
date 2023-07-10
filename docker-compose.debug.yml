@@ -15,12 +15,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - WORKER_URL=http://host.docker.internal:8020
+      - RABBITMQ_HOST=host.docker.internal
       - ZIPKIN_URL=http://host.docker.internal:9411
+      - ConnectionStrings__AppDbConnection=Server=host.docker.internal,1433;User Id=sa;Password=P@ssw0rd;Encrypt=false;Database=AppDb
     volumes:
       - ~/.vsdbg:/remote_debugger:rw
     depends_on: 
       - rabbitmq
-      - zipkin
 
   worker:
     container_name: worker
@@ -34,12 +35,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - WEBAPPLICATION2_URL=http://host.docker.internal:8010
+      - RABBITMQ_HOST=host.docker.internal
       - ZIPKIN_URL=http://host.docker.internal:9411
     volumes:
       - ~/.vsdbg:/remote_debugger:rw
     depends_on: 
       - rabbitmq
-      - zipkin
 
   mssql:
     container_name: mssql

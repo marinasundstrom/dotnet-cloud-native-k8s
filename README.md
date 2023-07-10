@@ -40,6 +40,13 @@ kubectl apply -f worker.yaml
 kubectl apply -f webapplication2.yaml
 ```
 
+To delete the deployments:
+
+```sh
+kubectl delete -f worker.yaml
+kubectl delete -f webapplication2.yaml
+```
+
 To then expose the main "webbapplication2" app to the host:
 
 ```sh

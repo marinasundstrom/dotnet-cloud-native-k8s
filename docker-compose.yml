@@ -14,11 +14,11 @@ services:
       - 8010:8080
     environment:
       - WORKER_URL=http://host.docker.internal:8020
+      - RABBITMQ_HOST=host.docker.internal
       - ZIPKIN_URL=http://host.docker.internal:9411
-      - ConnectionStrings__AppDbConnection=Server=mssql-svc,1433;User Id=sa;Password=P@ssw0rd;Encrypt=false;Database=AppDb
+      - ConnectionStrings__AppDbConnection=Server=host.docker.internal,1433;User Id=sa;Password=P@ssw0rd;Encrypt=false;Database=AppDb
     depends_on: 
       - rabbitmq
-      - zipkin
 
   worker:
     container_name: worker
@@ -31,10 +31,10 @@ services:
       - 8020:8080
     environment:
       - WEBAPPLICATION2_URL=http://host.docker.internal:8010
+      - RABBITMQ_HOST=host.docker.internal
       - ZIPKIN_URL=http://host.docker.internal:9411
     depends_on: 
       - rabbitmq
-      - zipkin
 
   mssql:
     container_name: mssql
