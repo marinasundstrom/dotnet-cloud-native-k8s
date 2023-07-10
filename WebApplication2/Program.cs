@@ -15,26 +15,24 @@ var serviceVersion = "1.0.0";
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure important OpenTelemetry settings, the console exporter, and instrumentation library
-builder.Services.AddOpenTelemetryTracing(tracerProviderBuilder =>
-{
-    tracerProviderBuilder
-    .AddConsoleExporter()
-    .AddZipkinExporter(o =>
-     {
-        var zipkinUrl = builder.Configuration["ZIPKIN_URL"] ?? "http://localhost:9411";
-        o.Endpoint = new Uri($"{zipkinUrl}/api/v2/spans");
-        o.ExportProcessorType = OpenTelemetry.ExportProcessorType.Simple;
-     })
-    .AddSource(serviceName)
-    .AddSource("MassTransit")
-    .SetResourceBuilder(
-        ResourceBuilder.CreateDefault()
-            .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-    .AddHttpClientInstrumentation()
-    .AddAspNetCoreInstrumentation()
-    .AddSqlClientInstrumentation()
-    .AddMassTransitInstrumentation();
-});
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracerProviderBuilder => tracerProviderBuilder
+            .AddConsoleExporter()
+            .AddZipkinExporter(o =>
+            {
+                var zipkinUrl = builder.Configuration["ZIPKIN_URL"] ?? "http://localhost:9411";
+                o.Endpoint = new Uri($"{zipkinUrl}/api/v2/spans");
+                o.ExportProcessorType = OpenTelemetry.ExportProcessorType.Simple;
+            })
+            .AddSource(serviceName)
+            .AddSource("MassTransit")
+            .SetResourceBuilder(
+                ResourceBuilder.CreateDefault()
+                    .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddSqlClientInstrumentation()
+            .AddMassTransitInstrumentation());
 
 // Add services to the container.
 
