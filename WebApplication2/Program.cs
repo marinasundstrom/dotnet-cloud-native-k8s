@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.EntityFrameworkCore;
+
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -51,8 +53,16 @@ builder.Services.Configure<JsonOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSqlServer<AppDbContext>(
-    builder.Configuration.GetConnectionString("mssql") ?? builder.Configuration.GetConnectionString("AppDbConnection"));
+builder.Services.AddDbContext<AppDbContext>(options => {
+    options.UseSqlServer(builder.Configuration.GetConnectionString("mssql") ?? builder.Configuration.GetConnectionString("AppDbConnection"),
+    providerOptions => providerOptions.EnableRetryOnFailure());
+    
+    if (builder.Environment.IsDevelopment()) 
+    {
+        options.EnableSensitiveDataLogging()
+         .EnableDetailedErrors();
+    }
+});
 
 builder.Services.AddMassTransit(x =>
 {
