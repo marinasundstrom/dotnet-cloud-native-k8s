@@ -71,6 +71,8 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
+
+        cfg.ConfigureEndpoints(context);
     });
 });
 
@@ -114,7 +116,8 @@ app.MapGet("/test", async () =>
 
 app.MapPost("/test2", async (IPublishEndpoint publishEndpoint, IRequestClient<Foo> requestClient, string text) =>
 {
-    return await requestClient.GetResponse<FooResponse>(new Foo(text));
+    var response = await requestClient.GetResponse<FooResponse>(new Foo(text));
+    return response.Message;
 
     //await publishEndpoint.Publish(new Foo(text));
 });
