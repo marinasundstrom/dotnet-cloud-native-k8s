@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 1s
+
+scrape_configs:
+  - job_name: 'webapplication2'
+    static_configs:
+      - targets: ['webapplication2:8080']
+  - job_name: 'worker'
+    static_configs:
+      - targets: ['worker:8080']

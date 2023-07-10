@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 1s
+
+scrape_configs:
+  - job_name: 'webapplication2'
+    static_configs:
+      - targets: ['host.docker.internal:8010']
+  - job_name: 'worker'
+    static_configs:
+      - targets: ['host.docker.internal:8020']

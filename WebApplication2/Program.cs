@@ -1,41 +1,27 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+
 using Contracts;
+
 using MassTransit;
+
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 using WebApplication2.Data;
 using WebApplication2.Models;
 
-// Define some important constants to initialize tracing with
-var serviceName = "MyCompany.MyProduct.MyService";
-var serviceVersion = "1.0.0";
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure important OpenTelemetry settings, the console exporter, and instrumentation library
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracerProviderBuilder => tracerProviderBuilder
-            .AddConsoleExporter()
-            .AddZipkinExporter(o =>
-            {
-                var zipkinUrl = builder.Configuration["ZIPKIN_URL"] ?? "http://localhost:9411";
-                o.Endpoint = new Uri($"{zipkinUrl}/api/v2/spans");
-                o.ExportProcessorType = OpenTelemetry.ExportProcessorType.Simple;
-            })
-            .AddSource(serviceName)
-            .AddSource("MassTransit")
-            .SetResourceBuilder(
-                ResourceBuilder.CreateDefault()
-                    .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation()
-            .AddSqlClientInstrumentation()
-            .AddMassTransitInstrumentation());
+builder.Host.UseSerilog((ctx, cfg) =>  cfg.ReadFrom.Configuration(builder.Configuration)
+                        .Enrich.WithProperty("Application", ctx.HostingEnvironment.ApplicationName)
+                        .Enrich.WithProperty("Environment", ctx.HostingEnvironment.EnvironmentName));
+
+string serviceName = "WebApplication2";
+
+builder.Services.AddObservability(serviceName, "1.0.0", builder.Configuration);
 
 // Add services to the container.
 
@@ -86,6 +72,10 @@ builder.Services.AddMassTransit(x =>
 });
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+app.MapObservability();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
