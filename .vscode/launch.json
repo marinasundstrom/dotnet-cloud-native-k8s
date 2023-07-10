@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/SomeService/bin/Debug/net7.0/SomeService.dll",
+            "program": "${workspaceFolder}/Worker/bin/Debug/net7.0/Worker.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SomeService",
+            "cwd": "${workspaceFolder}/Worker",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

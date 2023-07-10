@@ -18,8 +18,8 @@ services:
       protocol: https
       port: 5011
 
-  - name: some-service
-    project: SomeService/SomeService.csproj
+  - name: worker
+    project: Worker/Worker.csproj
     bindings:
     - name: http
       protocol: http

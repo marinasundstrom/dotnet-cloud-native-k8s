@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: someservice
+  name: worker
   labels:
     app: full-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: someservice
+      service: worker
   template:
     metadata:
       labels:
         app: full-app
-        service: someservice
+        service: worker
     spec:
       containers:
-      - name: someservice
-        image: sundis/someservice
+      - name: worker
+        image: sundis/worker
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -34,14 +34,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: someservice
+  name: worker
   labels:
     app: full-app
-    service: someservice
+    service: worker
 spec:
   ports:
     - port: 8080
       targetPort: 8080
       protocol: TCP
   selector:
-    service: someservice
+    service: worker

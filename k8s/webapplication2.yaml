@@ -25,8 +25,8 @@ spec:
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: Development
-          - name: SOMESERVICE_URL
-            value: http://someservice:8080/
+          - name: WORKER_URL
+            value: http://worker:8080/
           - name: RABBITMQ_HOST
             value: rabbitmq-svc
           - name: ZIPKIN_URL

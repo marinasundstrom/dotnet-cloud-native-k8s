@@ -36,7 +36,7 @@ If all is set-up correctly, simply apply the ``.yaml`` files found ``k8s`` direc
 kubectl apply -f mssql.yaml
 kubectl apply -f rabbimq.yaml
 kubectl apply -f zipkin.yaml
-kubectl apply -f someservice.yaml
+kubectl apply -f worker.yaml
 kubectl apply -f webapplication2.yaml
 ```
 
@@ -56,7 +56,7 @@ When working against the Minikube internal registry, all you need to do is build
 
 ```sh
 docker build . -f WebApplication2/Dockerfile -t sundis/webapplication2:latest
-docker build . -f SomeService/Dockerfile -t sundis/someservice:latest
+docker build . -f Worker/Dockerfile -t sundis/worker:latest
 ```
 
 Replace the relevant values with your own.

@@ -14,7 +14,7 @@ services:
       - 8010:8080
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - SOMESERVICE_URL=http://host.docker.internal:8020
+      - WORKER_URL=http://host.docker.internal:8020
       - ZIPKIN_URL=http://host.docker.internal:9411
     volumes:
       - ~/.vsdbg:/remote_debugger:rw
@@ -22,13 +22,13 @@ services:
       - rabbitmq
       - zipkin
 
-  someservice:
-    container_name: someservice
-    image: someservice
-    hostname: someservice
+  worker:
+    container_name: worker
+    image: worker
+    hostname: worker
     build:
       context: .
-      dockerfile: SomeService/Dockerfile
+      dockerfile: Worker/Dockerfile
     ports:
       - 8020:8080
     environment:

@@ -106,7 +106,7 @@ app.MapGet("/hello", () =>
 
 HttpClient client = new()
 {
-    BaseAddress = app.Configuration.GetServiceUri("some-service", "https") ?? new Uri(app.Configuration["SOMESERVICE_URL"]!)
+    BaseAddress = app.Configuration.GetServiceUri("worker", "https") ?? new Uri(app.Configuration["WORKER_URL"]!)
 };
 
 app.MapGet("/test", async () =>
