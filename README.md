@@ -36,15 +36,18 @@ If all is set-up correctly, simply apply the ``.yaml`` files found ``k8s`` direc
 kubectl apply -f mssql.yaml
 kubectl apply -f rabbitmq.yaml
 kubectl apply -f zipkin.yaml
-kubectl apply -f worker.yaml
 kubectl apply -f webapplication2.yaml
+kubectl apply -f worker.yaml
+kubectl apply -f loki.yaml
+kubectl apply -f prometheus.yaml
+kubectl apply -f grafana.yaml
 ```
 
 To delete the deployments:
 
 ```sh
-kubectl delete -f worker.yaml
 kubectl delete -f webapplication2.yaml
+kubectl delete -f worker.yaml
 ```
 
 To then expose the main "webbapplication2" app to the host:
@@ -102,5 +105,13 @@ Read more here: https://medium.com/swlh/how-to-run-locally-built-docker-images-i
 Expose a directory in the host system to Minikube.
 
 ```sh
-minikube mount $HOME:/host --uid=10001
+minikube mount "$HOME:/host" --uid=10001
+```
+
+Example:
+
+```sh
+minikube mount "/Users/marina/Projects/WebApplication2/.data:/host"
+minikube mount "/Users/marina/Projects/WebApplication2/grafana:/grafana"
+minikube mount "/Users/marina/ProjectsWebApplication2/prometheus:/prometheus"
 ```

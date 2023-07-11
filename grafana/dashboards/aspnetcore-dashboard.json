@@ -898,8 +898,8 @@
       {
         "current": {
           "selected": false,
-          "text": "orders",
-          "value": "orders"
+          "text": "webapplication2",
+          "value": "webapplication2"
         },
         "datasource": {
           "type": "prometheus",
@@ -925,8 +925,8 @@
       {
         "current": {
           "selected": false,
-          "text": "orders:8080",
-          "value": "orders:8080"
+          "text": "webapplication2:8080",
+          "value": "webapplication2:8080"
         },
         "datasource": {
           "type": "prometheus",
