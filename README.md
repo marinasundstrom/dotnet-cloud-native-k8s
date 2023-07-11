@@ -34,7 +34,7 @@ If all is set-up correctly, simply apply the ``.yaml`` files found ``k8s`` direc
 
 ```sh
 kubectl apply -f mssql.yaml
-kubectl apply -f rabbimq.yaml
+kubectl apply -f rabbitmq.yaml
 kubectl apply -f zipkin.yaml
 kubectl apply -f worker.yaml
 kubectl apply -f webapplication2.yaml
@@ -102,5 +102,5 @@ Read more here: https://medium.com/swlh/how-to-run-locally-built-docker-images-i
 Expose a directory in the host system to Minikube.
 
 ```sh
-minikube mount $HOME:/host
+minikube mount $HOME:/host --uid=10001
 ```

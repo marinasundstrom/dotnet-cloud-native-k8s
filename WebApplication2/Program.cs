@@ -9,6 +9,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 using WebApplication2.Data;
+using WebApplication2.Models;
 
 // Define some important constants to initialize tracing with
 var serviceName = "MyCompany.MyProduct.MyService";
@@ -109,7 +110,7 @@ app.MapGet("/hello", () =>
     activity?.SetTag("bar", "Hello, World!");
     activity?.SetTag("baz", new int[] { 1, 2, 3 });
 
-    return "Hello, World!";
+    return Environment.MachineName;
 });
 
 HttpClient client = new()
@@ -122,9 +123,14 @@ app.MapGet("/test", async () =>
     return await client.GetStringAsync("/weatherforecast");
 });
 
-app.MapPost("/test2", async (IPublishEndpoint publishEndpoint, IRequestClient<Foo> requestClient, string text) =>
+app.MapPost("/test2", async (AppDbContext context, IPublishEndpoint publishEndpoint, IRequestClient<Foo> requestClient, string text, CancellationToken cancellationToken) =>
 {
     var response = await requestClient.GetResponse<FooResponse>(new Foo(text));
+
+    context.Items.Add(new Item(response.Message.Text));
+
+    await context.SaveChangesAsync(cancellationToken);
+
     return response.Message;
 
     //await publishEndpoint.Publish(new Foo(text));

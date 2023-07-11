@@ -5,7 +5,7 @@ metadata:
   labels:
     app: full-app
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       service: worker
@@ -39,6 +39,7 @@ metadata:
     app: full-app
     service: worker
 spec:
+  type: LoadBalancer
   ports:
     - port: 8080
       targetPort: 8080

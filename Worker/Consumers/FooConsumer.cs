@@ -31,6 +31,8 @@ public class FooConsumer : IConsumer<Foo>
 
         await client.GetAsync("/test");
 
-        await context.RespondAsync(new FooResponse("OK"));
+        await Task.Delay(Random.Shared.Next(0, 2000));
+
+        await context.RespondAsync(new FooResponse($"Echo: \"{context.Message.Text}\", from {Environment.MachineName}"));
     }
 }
