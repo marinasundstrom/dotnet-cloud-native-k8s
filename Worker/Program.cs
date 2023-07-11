@@ -3,32 +3,15 @@ using Microsoft.AspNetCore.Http.Json;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text.Json.Serialization;
-
-// Define some important constants to initialize tracing with
-var serviceName = "MyCompany.MyProduct.MyOtherService";
-var serviceVersion = "1.0.0";
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure important OpenTelemetry settings, the console exporter, and instrumentation library
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracerProviderBuilder => tracerProviderBuilder
-            .AddConsoleExporter()
-            .AddZipkinExporter(o =>
-            {
-                var zipkinUrl = builder.Configuration["ZIPKIN_URL"] ?? "http://localhost:9411";
-                o.Endpoint = new Uri($"{zipkinUrl}/api/v2/spans");
-                o.ExportProcessorType = OpenTelemetry.ExportProcessorType.Simple;
-            })
-            .AddSource(serviceName)
-            .AddSource("MassTransit")
-            .SetResourceBuilder(
-                ResourceBuilder.CreateDefault()
-                    .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation()
-            .AddSqlClientInstrumentation()
-            .AddMassTransitInstrumentation());
+builder.Host.UseSerilog((ctx, cfg) =>  cfg.ReadFrom.Configuration(builder.Configuration)
+                        .Enrich.WithProperty("Application", ctx.HostingEnvironment.ApplicationName)
+                        .Enrich.WithProperty("Environment", ctx.HostingEnvironment.EnvironmentName));
+
+builder.Services.AddObservability("Worker", "1.0.0", builder.Configuration);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -61,6 +44,10 @@ builder.Services.AddMassTransit(x =>
 });
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+app.MapObservability();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

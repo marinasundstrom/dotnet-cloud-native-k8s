@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsNonRoot: false
+        runAsGroup: 0
+        fsGroup: 0
+      containers:
+        - name: prometheus
+          image: prom/prometheus
+          args:
+            - '--config.file=/etc/prometheus/prometheus.local.yml'
+          ports:
+          - containerPort: 9090
+            name: http-prometheus
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 250m
+              memory: 2Gi
+          volumeMounts:
+            - name: prometheus
+              mountPath: /etc/prometheus/
+            - name: promdata
+              mountPath: /prometheus/data
+      initContainers:
+      - name: volume-permissions
+        image: busybox:latest
+        command: ["/bin/sh"]
+        args: ["-c", "chmod -R 777 /prometheus/data"]
+        volumeMounts:
+        - name: promdata
+          mountPath: /prometheus/data
+      volumes:
+        - name: prometheus
+          hostPath:
+            path: /prometheus
+        - name: promdata
+          hostPath:
+            path: /host/prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  ports:
+    - port: 9090
+      protocol: TCP
+      targetPort: http-prometheus
+  selector:
+    app: prometheus
+  sessionAffinity: None
+  type: LoadBalancer

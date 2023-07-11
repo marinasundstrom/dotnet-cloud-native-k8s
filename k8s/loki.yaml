@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      containers:
+        - name: loki
+          image: grafana/loki
+          args:
+            - "-config.file=/etc/loki/local-config.yaml"
+          ports:
+          - containerPort: 3100
+            name: http-loki
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 250m
+              memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+spec:
+  ports:
+    - port: 3100
+      protocol: TCP
+      targetPort: http-loki
+  selector:
+    app: loki
+  sessionAffinity: None
+  type: LoadBalancer
